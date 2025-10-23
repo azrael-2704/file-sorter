@@ -1,0 +1,25 @@
+# Core dependencies for file handling
+python-docx==0.8.11
+openpyxl==3.1.2
+PyMuPDF==1.23.5
+python-pptx==0.6.22
+
+# Text processing
+nltk==3.8.1
+scikit-learn==1.3.0  # For text vectorization and clustering
+# gensim removed — using TF-IDF extractive summarization instead to avoid heavy SciPy/SciKit conflicts
+
+# OCR Python wrapper (Tesseract engine should be installed via conda)
+pytesseract==0.3.10
+
+# Image processing
+Pillow==9.5.0
+# OpenCV is often installed via conda in conda environments; remove the pip-only
+# 'opencv-python-headless' to avoid uninstall conflicts with conda-managed packages.
+# If you need to install OpenCV via conda: `conda install -c conda-forge opencv`
+
+# Utilities
+pandas==2.1.1
+numpy==1.24.3
+tqdm==4.66.1
+rich==13.6.0
