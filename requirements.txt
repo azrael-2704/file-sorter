@@ -18,6 +18,10 @@ Pillow==9.5.0
 # 'opencv-python-headless' to avoid uninstall conflicts with conda-managed packages.
 # If you need to install OpenCV via conda: `conda install -c conda-forge opencv`
 
+# AI and API Dependencies
+google-generativeai>=0.3.0
+python-dotenv==1.0.0
+
 # Utilities
 pandas==2.1.1
 numpy==1.24.3

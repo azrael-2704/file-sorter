@@ -1,11 +1,13 @@
 import re
 import os
 import time
+import asyncio
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from rich.progress import Progress, TextColumn, BarColumn, TimeElapsedColumn
-from data_processing_common import sanitize_filename  # Import sanitize_filename
+from data_processing import sanitize_filename
+from gemini_handler import analyze_image_with_gemini, is_api_available  # Import Gemini handler
 
 def get_text_from_generator(generator):
     """Extract text from the generator response."""
@@ -22,7 +24,7 @@ def get_text_from_generator(generator):
         pass
     return response_text
 
-def process_single_image(image_path, image_inference, text_inference, silent=False, log_file=None):
+def process_single_image(image_path, image_inference, text_inference, silent=False, log_file=None, suggested_folders=None):
     """Process a single image file to generate metadata."""
     start_time = time.time()
 
@@ -33,7 +35,32 @@ def process_single_image(image_path, image_inference, text_inference, silent=Fal
         TimeElapsedColumn()
     ) as progress:
         task_id = progress.add_task(f"Processing {os.path.basename(image_path)}", total=1.0)
-        foldername, filename, description = generate_image_metadata(image_path, progress, task_id, image_inference, text_inference)
+        
+        # Try Gemini API first
+        if is_api_available():
+            try:
+                description, object_type, success = asyncio.run(analyze_image_with_gemini(image_path))
+                if success:
+                    # Use the Gemini results to generate metadata
+                    foldername = object_type
+                    filename = description.split()[0:3]  # Use first 3 words of description
+                    filename = "_".join(filename)
+                    progress.update(task_id, completed=1.0)
+                else:
+                    # Fallback to local processing
+                    foldername, filename, description = generate_image_metadata(
+                        image_path, progress, task_id, image_inference, text_inference, suggested_folders=suggested_folders
+                    )
+            except Exception as e:
+                print(f"Gemini API error: {str(e)}. Falling back to local processing.")
+                foldername, filename, description = generate_image_metadata(
+                    image_path, progress, task_id, image_inference, text_inference, suggested_folders=suggested_folders
+                )
+        else:
+            # Use local processing if API is not available
+            foldername, filename, description = generate_image_metadata(
+                image_path, progress, task_id, image_inference, text_inference, suggested_folders=suggested_folders
+            )
     
     end_time = time.time()
     time_taken = end_time - start_time
@@ -52,15 +79,15 @@ def process_single_image(image_path, image_inference, text_inference, silent=Fal
         'description': description
     }
 
-def process_image_files(image_paths, image_inference, text_inference, silent=False, log_file=None):
+def process_image_files(image_paths, image_inference, text_inference, silent=False, log_file=None, suggested_folders=None):
     """Process image files sequentially."""
     data_list = []
     for image_path in image_paths:
-        data = process_single_image(image_path, image_inference, text_inference, silent=silent, log_file=log_file)
+        data = process_single_image(image_path, image_inference, text_inference, silent=silent, log_file=log_file, suggested_folders=suggested_folders)
         data_list.append(data)
     return data_list
 
-def generate_image_metadata(image_path, progress, task_id, image_inference, text_inference):
+def generate_image_metadata(image_path, progress, task_id, image_inference, text_inference, suggested_folders=None):
     """Generate description, folder name, and filename for an image file."""
 
     # Total steps in processing an image
@@ -95,9 +122,12 @@ Filename:"""
     progress.update(task_id, advance=1 / total_steps)
 
     # Step 3: Generate folder name from description using text_inference
+    folder_suggestion_text = ""
+    if suggested_folders:
+        folder_suggestion_text = f"\n\nSuggested folders for reuse: {', '.join(sorted(suggested_folders))}\nIf the image fits one of these categories, reuse the folder name. Otherwise, suggest a new category."
     foldername_prompt = f"""Based on the description below, generate a general category or theme that best represents the main subject of this image.
 This will be used as the folder name. Limit the category to a maximum of 2 words. Use nouns and avoid verbs.
-Do not include specific details, words from the filename, or any generic terms like 'untitled' or 'unknown'.
+Do not include specific details, words from the filename, or any generic terms like 'untitled' or 'unknown'.{folder_suggestion_text}
 
 Description: {description}
 

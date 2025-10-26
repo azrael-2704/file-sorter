@@ -1,206 +1,145 @@
-# Local File Organizer: AI File Management Run Entirely on Your Device, Privacy Assured
+# Local File Organizer: Smart File Management Using Local Machine Learning
 
-Tired of digital clutter? Overwhelmed by disorganized files scattered across your computer? Let AI do the heavy lifting! The Local File Organizer is your personal organizing assistant, using cutting-edge AI to bring order to your file chaos - all while respecting your privacy.
+Bring order to your digital chaos with this intelligent file organizer that uses lightweight machine learning algorithms to automatically categorize and organize your files - all while running entirely on your local machine with no external dependencies.
 
-## How It Works 💡
+## How It Works
+
+The Local File Organizer processes your files using:
+
+- **Text Analysis**: Uses TF-IDF vectorization and NLTK for understanding text content
+- **Image Analysis**: Employs OpenCV and scikit-learn for visual content understanding
+- **Smart Categorization**: Applies machine learning techniques to group similar files
+- **Intelligent Renaming**: Generates descriptive filenames based on file content
 
 Before:
-
 ```
-/home/user/messy_documents/
-├── IMG_20230515_140322.jpg
-├── IMG_20230516_083045.jpg
-├── IMG_20230517_192130.jpg
-├── budget_2023.xlsx
-├── meeting_notes_05152023.txt
-├── project_proposal_draft.docx
-├── random_thoughts.txt
-├── recipe_chocolate_cake.pdf
-├── scan0001.pdf
-├── vacation_itinerary.docx
-└── work_presentation.pptx
-
-0 directories, 11 files
+/messy_folder/
+├── IMG_20230515.jpg      # Picture of an apple
+├── IMG_20230516.jpg      # Picture of office desk
+├── notes_20230517.txt    # Meeting minutes
+├── data_analysis.xlsx    # Sales data
+└── document1.pdf         # Company policy
 ```
 
 After:
-
 ```
-/home/user/organized_documents/
-├── Financial
-│   └── 2023_Budget_Spreadsheet.xlsx
-├── Food_and_Recipes
-│   └── Chocolate_Cake_Recipe.pdf
-├── Meetings_and_Notes
-│   └── Team_Meeting_Notes_May_15_2023.txt
-├── Personal
-│   └── Random_Thoughts_and_Ideas.txt
-├── Photos
-│   ├── Cityscape_Sunset_May_17_2023.jpg
-│   ├── Morning_Coffee_Shop_May_16_2023.jpg
-│   └── Office_Team_Lunch_May_15_2023.jpg
-├── Travel
-│   └── Summer_Vacation_Itinerary_2023.docx
-└── Work
-    ├── Project_X_Proposal_Draft.docx
-    ├── Quarterly_Sales_Report.pdf
-    └── Marketing_Strategy_Presentation.pptx
-
-7 directories, 11 files
+/organized_folder/
+├── Food_and_Produce/
+│   └── Red_Apple_Photo_May15.jpg
+├── Office/
+│   ├── Workspace_Setup_May16.jpg
+│   └── Meeting_Minutes_May17.txt
+├── Financial/
+│   └── Sales_Analysis_2023.xlsx
+└── Documents/
+    └── Company_Policy_Guidelines.pdf
 ```
 
-## Updates 🚀
+## Features
 
-This repository was refactored to remove the Nexa SDK dependency and provide a fully local, lightweight inference pipeline using commonly-available Python libraries (scikit-learn, OpenCV, NLTK). The goal is to avoid heavy native build dependencies and allow offline execution on typical developer machines.
-
-Key changes:
-- Replaced large transformer/VLM model dependencies with a heuristic + TF-IDF extractive summarizer for text and OpenCV-based image analysis.
-- Removed direct usage of the Nexa SDK and transformer models to avoid PyTorch/safetensors/Rust build issues.
-- Simplified `local_ai.py` to use scikit-learn, NLTK, and OpenCV so installation works well inside conda environments.
-
-Why this change: it reduces installation friction (no PyTorch/CUDA or Rust toolchain needed) and keeps all processing local and private.
-
-
-## Roadmap 📅
-
-- [ ] Copilot Mode: chat with AI to tell AI how you want to sort the file (ie. read and rename all the PDFs)
-- [ ] Change models with CLI 
-- [ ] ebook format support
-- [ ] audio file support
-- [ ] video file support
-- [ ] Implement best practices like Johnny Decimal
-- [ ] Check file duplication
-- [ ] Dockerfile for easier installation
-- [ ] People from [Nexa](https://github.com/NexaAI/nexa-sdk) is helping me to make executables for macOS, Linux and Windows
-
-## What It Does 🔍
-
-This intelligent file organizer harnesses the power of advanced AI models, including language models (LMs) and vision-language models (VLMs), to automate the process of organizing files by:
-
-
-* Scanning a specified input directory for files.
-* Content Understanding: 
-  - **Textual Analysis**: Uses the [Llama3.2 3B](https://nexaai.com/meta/Llama3.2-3B-Instruct/gguf-q3_K_M/file) to analyze and summarize text-based content, generating relevant descriptions and filenames.
-  - **Visual Content Analysis**: Uses the [LLaVA-v1.6](https://nexaai.com/liuhaotian/llava-v1.6-vicuna-7b/gguf-q4_0/file) , based on Vicuna-7B, to interpret visual files such as images, providing context-aware categorization and descriptions.
-
-* Understanding the content of your files (text, images, and more) to generate relevant descriptions, folder names, and filenames.
-* Organizing the files into a new directory structure based on the generated metadata.
-
-The best part? All AI processing happens 100% on your local device using the [Nexa SDK](https://github.com/NexaAI/nexa-sdk). No internet connection required, no data leaves your computer, and no AI API is needed - keeping your files completely private and secure.
-
+- **100% Local Processing**: All analysis happens on your machine
+- **No Internet Required**: Works completely offline
+- **Privacy First**: No data leaves your computer
+- **Resource Efficient**: Uses lightweight ML algorithms
+- **Smart Object Detection**: Identifies common objects in images
+- **Text Understanding**: Extracts key topics from documents
+- **OCR Support**: Reads text from images and PDFs
 
 ## Supported File Types 📁
 
 - **Images:** `.png`, `.jpg`, `.jpeg`, `.gif`, `.bmp`
-- **Text Files:** `.txt`, `.docx`, `.md`
-- **Spreadsheets:** `.xlsx`, `.csv`
+- **Documents:** `.txt`, `.docx`, `.md`, `.pdf`
+- **Data Files:** `.xlsx`, `.csv`
 - **Presentations:** `.ppt`, `.pptx`
-- **PDFs:** `.pdf`
 
-## Prerequisites 💻
+## Installation 🛠️
 
-- **Operating System:** Compatible with Windows, macOS, and Linux.
-- **Python Version:** Python 3.12
-- **Conda:** Anaconda or Miniconda installed.
-- **Git:** For cloning the repository (or you can download the code as a ZIP file).
+### Prerequisites
 
-## Installation 🛠
+- Python 3.11
+- Conda package manager
+- Windows, macOS, or Linux
 
-> For SDK installation and model-related issues, please post on [here](https://github.com/NexaAI/nexa-sdk/issues).
+### Setup Steps
 
-### 1. Install Python
-
-Before installing the Local File Organizer, make sure you have Python installed on your system. We recommend using Python 3.12 or later.
-
-You can download Python from [the official website]((https://www.python.org/downloads/)).
-
-Follow the installation instructions for your operating system.
-
-### 2. Clone the Repository
-
-Clone this repository to your local machine using Git:
-
-```zsh
-git clone https://github.com/QiuYannnn/Local-File-Organizer.git
-```
-
-Or download the repository as a ZIP file and extract it to your desired location.
-
-### 3. Set Up the Python Environment
-
-Create a new Conda environment named `local_file_organizer` with Python 3.12:
-
-```zsh
-conda create --name local_file_organizer python=3.12
-```
-
-Activate the environment:
-
-```zsh
-conda activate local_file_organizer
-```
-
-### 4. Install dependencies (conda + pip recommended)
-
-We strongly recommend creating and using a Conda environment. Conda provides pre-built binary packages (numpy, OpenCV, SciPy, scikit-learn) which avoids compiling from source and prevents common installation errors on Windows.
-
-1. Create and activate the conda environment:
-
+1. Create and activate conda environment:
 ```powershell
 conda create --name file-sorter python=3.11 -y
 conda activate file-sorter
 ```
 
-2. Install heavy binary packages from conda-forge (these include numpy, OpenCV, SciPy, scikit-learn, Pillow, and Tesseract OCR engine):
-
+2. Install core dependencies:
 ```powershell
 conda install -y -c conda-forge numpy=1.24.3 pillow=9.5.0 pandas scikit-learn scipy opencv nltk tesseract
 ```
 
-3. Install the remaining Python packages via pip (inside the activated env):
-
+3. Install remaining packages:
 ```powershell
 python -m pip install -r requirements.txt
 ```
 
-Notes:
-- We removed the Nexa SDK and heavy transformer runtimes to keep this project lightweight and easy to install locally.
-- `tesseract` (OCR engine) is installed via conda; the Python wrapper `pytesseract` is listed in `requirements.txt` and will be installed with pip.
+### Optional Components
 
-### 5. Running the Script 🎉
+- **Tesseract OCR**: Required for text extraction from images
+  - Windows: Download from [UB-Mannheim/tesseract](https://github.com/UB-Mannheim/tesseract/wiki)
+  - macOS: `brew install tesseract`
+  - Linux: `sudo apt install tesseract-ocr`
 
-After completing the installation steps above, run:
+## Environment Variables
 
+Before running the application, you need to create a `.env` file in the root directory of the project. This file is used to store your Gemini API key.
+
+1.  **Create a `.env` file** in the root of the project.
+2.  **Add the following line** to the `.env` file:
+
+    ```
+    GEMINI_API_KEY="your_api_key_here"
+    ```
+
+    Replace `"your_api_key_here"` with your actual Gemini API key.
+
+## Usage
+
+1. Activate the conda environment:
+```powershell
+conda activate file-sorter
+```
+
+2. Run the organizer:
 ```powershell
 python main.py
 ```
 
-This will analyze the files in the configured input directory and print/move files according to the rules in the project.
+3. Follow the prompts to select input and output directories
 
-## Notes
+## How It Works Under the Hood
 
-- **SDK Models:**
-  - The script uses `NexaVLMInference` and `NexaTextInference` models [usage](https://docs.nexaai.com/sdk/python-interface/gguf).
-  - Ensure you have access to these models and they are correctly set up.
-  - You may need to download model files or configure paths.
+### Text Processing
+- NLTK for tokenization and text preprocessing
+- TF-IDF vectorization for content analysis
+- Scikit-learn for text classification
+- Extractive summarization for file descriptions
 
+### Image Processing
+- OpenCV for image analysis and object detection
+- Color space analysis (HSV) for object recognition
+- Shape detection for specific item recognition
+- OCR integration for text in images
 
-- **Dependencies:**
-  - **pytesseract:** Requires Tesseract OCR installed on your system.
-    - **macOS:** `brew install tesseract`
-    - **Ubuntu/Linux:** `sudo apt-get install tesseract-ocr`
-    - **Windows:** Download from [Tesseract OCR Windows Installer](https://github.com/UB-Mannheim/tesseract/wiki)
-  - **PyMuPDF (fitz):** Used for reading PDFs.
+### File Organization
+- Content-based clustering for folder creation
+- Intelligent filename generation
+- Metadata extraction and analysis
+- Multi-threaded processing for performance
 
-- **Processing Time:**
-  - Processing may take time depending on the number and size of files.
-  - The script uses multiprocessing to improve performance.
+## Configuration
 
-- **Customizing Prompts:**
-  - You can adjust prompts in `data_processing.py` to change how metadata is generated.
+The organizer can be customized through:
+- File type extensions in `file_utils.py`
+- Processing rules in `data_processing_common.py`
+- Output formatting in `output_filter.py`
 
 ## License
 
-This project is dual-licensed under the MIT License and Apache 2.0 License. You may choose which license you prefer to use for this project.
-
-- See the [MIT License](LICENSE-MIT) for more details.
+This project is dual-licensed under the MIT License and Apache 2.0 License.
+See the [LICENSE](LICENSE) file for details.
